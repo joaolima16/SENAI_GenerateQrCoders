@@ -6,7 +6,6 @@ rotas.get('/criarTabela',Controllers.CreateTable);
 rotas.post('/criarUsuario',Controllers.CreateUser,(err)=>{
     if (err) throw err;
 });
-rotas.get('/teste',Controllers.testePath)
 
 
 module.exports = rotas;

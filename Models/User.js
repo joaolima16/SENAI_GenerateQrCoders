@@ -12,6 +12,9 @@ const user = sequelize.define('user',{
     },
     senha:{
         type:DataTypes.STRING
+    },
+    pathQrcode:{
+        type: DataTypes.STRING
     }
 })
 module.exports = user;
