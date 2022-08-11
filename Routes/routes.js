@@ -1,11 +1,13 @@
-const {Routes, Router} = require('express');
-const Controllers = require('../Controllers/UsersControllers')
-const rotas = Router();
+const router = require('router');
+const controller = require('../controllers/Controller');
+const projectController = require("../controllers/ProjectController/");
+const route = router();
+const upload = require('../middlewares/upload');
 
-rotas.get('/criarTabela',Controllers.CreateTable);
-rotas.post('/criarUsuario',Controllers.CreateUser,(err)=>{
-    if (err) throw err;
-});
+route.get('/migration',controller.createTable);
+route.get('/:qrcode', projectController.index);
+route.post('/', upload.single('excel'), projectController.create);
+route.put('/', projectController.update);
+route.delete('/', projectController.delete);
 
-
-module.exports = rotas;
+module.exports = route;
