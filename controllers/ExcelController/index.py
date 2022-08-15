@@ -5,36 +5,33 @@ from json_tratament import JSON_Tratament as jt
 class Excel_Tratament:
     def main(self):
         objectConfig = ct.configsObject(None)
-        excelSheet = self.__getExcelFile(objectConfig['file_name'])
+        excelSheet = Excel_Tratament.__getExcelFile(objectConfig['file_name'])
         
-        columnReference = self.__getColumnReference(excelSheet, objectConfig["column_codes"])
-        allCodes = self.__getRowsData(excelSheet, columnReference)
+        columnReference = Excel_Tratament.__getColumnReference(excelSheet, objectConfig["column_codes"])
+        allCodes = Excel_Tratament.__getRowsData(excelSheet, columnReference)
         
-        columnReference = self.__getColumnReference(excelSheet, objectConfig["column_names"])
-        allNames = self.__getRowsData(excelSheet, columnReference)
+        columnReference = Excel_Tratament.__getColumnReference(excelSheet, objectConfig["column_names"])
+        allNames = Excel_Tratament.__getRowsData(excelSheet, columnReference)
 
-        finalData = self.__formationData(allCodes,allNames)
+        finalData = Excel_Tratament.__formationData(allCodes,allNames)
         
-        return jt.createJSON(None, finalData)
+        print(jt.createJSON(None, finalData))
 
-    @staticmethod
-    def __formationData(keyArr, valueArr):
+    def __formationData(codeArr, nameArr):
         arrFinal = []
-        for i in range(len(keyArr)):
-            arrFinal.append({keyArr[i]:valueArr[i]})
+        for i in range(len(codeArr)):
+            arrFinal.append({'code':codeArr[i],'name':nameArr[i]})
         return arrFinal
     
-    @staticmethod
     def __getColumnReference(sheet, columnCodes):
         index = 0
         while True:
-            letterColumn = chr(66-index)
+            letterColumn = chr(66+index)
             columnName = f"{letterColumn}1"
             if(sheet[columnName].value == columnCodes):
                 return columnName 
             index += 1
     
-    @staticmethod
     def __getRowsData(sheet, columnReference):
         arrCodes = []
         index = 2
@@ -44,7 +41,6 @@ class Excel_Tratament:
             arrCodes.append(rowData.value)
             index += 1
     
-    @staticmethod
     def __getExcelFile(fileName):
         wb = load_workbook(fileName)
         return wb.active

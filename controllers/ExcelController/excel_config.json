@@ -1,5 +1,5 @@
 {
-    "file_name":"tabelaCarros.xlsx",
-    "column_codes":"id",
-    "column_names":"carros"
+    "file_name": "Excel Teste QrCode.xlsx",
+    "column_codes": "position",
+    "column_names": "name"
 }

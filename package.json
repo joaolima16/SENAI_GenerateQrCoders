@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon start",
+    "start": "node index.js",
     "install_python": "pip install -r Excel_Tratament/requirements.txt"
   },
   "author": "",
