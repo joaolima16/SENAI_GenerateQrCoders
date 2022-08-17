@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "install_python": "pip install -r Excel_Tratament/requirements.txt",
+    "install_python": "pip install -r controllers/ExcelController/requirements.txt",
     "swagger-autogen":"node swagger.js"
   },
   "author": "",
