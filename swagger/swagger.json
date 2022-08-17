@@ -1,0 +1,104 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "REST API",
+    "description": ""
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/migration": {
+      "get": {
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/{qrcode}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "qrcode",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/": {
+      "post": {
+        "description": "Criação de QR-Codes a partir de um arquivo .xlsx <br/> [Acione a rota duas vezes]",
+        "parameters": [
+          {
+            "name": "colnames",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "colcodes": {
+                  "example": "any"
+                },
+                "colnames": {
+                  "example": "any"
+                }
+              }
+            },
+            "description": "Nome da coluna com os nomes dos items",
+            "required": true,
+            "example": "modelo_itens"
+          },
+          {
+            "name": "colcodes",
+            "description": "Nome da coluna com os códigos de patrimônio",
+            "required": true,
+            "in": "body",
+            "example": "codigos",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      },
+      "delete": {
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    }
+  }
+}

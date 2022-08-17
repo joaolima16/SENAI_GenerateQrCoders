@@ -17,15 +17,31 @@ class ProjectController{
         }
     }
     
-    arrCodes = '';
-
-    static #setArrCodes(data){
-        ProjectController.arrCodes = JSON.parse(data);
-    }
-
     static async create(req, res, next){
-        try{            
-            ProjectController.#createJsonConfig(req.file.filename,req.body.colcodes,req.body.colnames);
+        /*
+            #swagger.description = "Criação de QR-Codes a partir de um arquivo .xlsx <br/> [Acione a rota duas vezes]"
+        */
+        /*
+            #swagger.parameters['colnames']={
+                description:'Nome da coluna com os nomes dos items',
+                type:'string',
+                required:true,
+                in:'body',
+                example:'modelo_itens',
+            }
+            
+            #swagger.parameters['colcodes']={
+                description:'Nome da coluna com os códigos de patrimônio',
+                type:'string',
+                required:true,
+                in:'body',
+                example:'codigos',
+            }
+        */
+        try{
+            const {colcodes, colnames} = req.body;
+            const {filename,path} = req.file;  
+            ProjectController.#createJsonConfig(filename,colcodes,colnames);
             ProjectController.#allCodes();
             var codes = ProjectController.arrCodes?.codes;
             if(codes !== undefined && codes !== ''){
@@ -39,7 +55,7 @@ class ProjectController{
                         productId:projectResult.id
                     });
                 })
-                fs.unlinkSync(req.file.path);
+                fs.unlinkSync(path);
             }
             res.status(200).json({message:"Insert process sucessful"});
         }catch(error){
@@ -54,6 +70,12 @@ class ProjectController{
     
     static async delete(req, res){
 
+    }
+
+    arrCodes = '';
+
+    static #setArrCodes(data){
+        ProjectController.arrCodes = JSON.parse(data);
     }
 
     static #createJsonConfig(excelName, colCodes, colNames){ 
