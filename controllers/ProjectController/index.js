@@ -1,11 +1,10 @@
 const Sequelize = require('sequelize');
-const qrcode = require('qrcode');
 const fs = require('fs');
 const {spawn} = require('child_process');
 const path = require('path');
 const projectTable = require('../../models/Products');
 const qrCodeTable = require('../../models/QRCodes');
-
+const QRCodeController = require('../QRCodeController');
 class ProjectController{
     static async index(req, res){
         const reference = req.params.qrcode;
@@ -45,16 +44,17 @@ class ProjectController{
             ProjectController.#allCodes();
             var codes = ProjectController.arrCodes?.codes;
             if(codes !== undefined && codes !== ''){
+                const QRCode = new QRCodeController();
                 codes.map(async (item)=>{
                     const nameQrCode = `QRProduct-${item.name}.png`;
-                    ProjectController.#createQRCode(nameQrCode,item.code);
+                    await QRCode.create(nameQrCode,item.code);
                     const projectResult = await projectTable.create({name:item.name});
                     const qrCodeResult = await qrCodeTable.create({
                         productName:item.name,
                         pathImage:`${req.protocol}://${req.headers.host}/${nameQrCode}`,
                         productId:projectResult.id
                     });
-                })
+                });
                 fs.unlinkSync(path);
             }
             res.status(200).json({message:"Insert process sucessful"});
@@ -86,10 +86,6 @@ class ProjectController{
             column_names:colNames
         },null,4);
         fs.writeFileSync(jsonPath, jsonConfig);
-    }
-
-    static #createQRCode(name, text){
-        qrcode.toFile(`public/${name}`, String(text));
     }
 
     static #allCodes(){
