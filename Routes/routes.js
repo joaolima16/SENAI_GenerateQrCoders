@@ -8,6 +8,6 @@ route.get('/migration',controller.createTable);
 route.get('/:qrcode', projectController.index);
 route.post('/', upload.single('excel'), projectController.create);
 route.put('/', projectController.update);
-route.delete('/', projectController.delete);
+route.delete('/:id', projectController.delete);
 
 module.exports = route;

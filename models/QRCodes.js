@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require('../config/configdb');
 
-const qrCodes = db.define('QRCodes',{
+const qrCodes = db.define('qrcodes',{
     id:{
         primaryKey:true,
         autoIncrement:true,

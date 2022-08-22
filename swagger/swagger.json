@@ -81,8 +81,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "500": {
             "description": "Internal Server Error"
@@ -93,11 +93,28 @@
         "description": "",
         "parameters": [],
         "responses": {}
-      },
+      }
+    },
+    "/{id}": {
       "delete": {
-        "description": "",
-        "parameters": [],
-        "responses": {}
+        "description": "Deletar QRCode da pasta public e da base de dados a partir de um id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "description": "Insira o id do item que deseja excluir"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     }
   }

@@ -2,9 +2,11 @@ const Sequelize = require('sequelize');
 const fs = require('fs');
 const {spawn} = require('child_process');
 const path = require('path');
-const projectTable = require('../../models/Products');
+const controller = require('../Controller');
+const productTable = require('../../models/Products');
 const qrCodeTable = require('../../models/QRCodes');
 const QRCodeController = require('../QRCodeController');
+
 class ProjectController{
     static async index(req, res){
         const reference = req.params.qrcode;
@@ -16,7 +18,7 @@ class ProjectController{
         }
     }
     
-    static async create(req, res, next){
+    static async create(req, res){
         /*
             #swagger.description = "Criação de QR-Codes a partir de um arquivo .xlsx <br/> [Acione a rota duas vezes]"
         */
@@ -48,7 +50,7 @@ class ProjectController{
                 codes.map(async (item)=>{
                     const nameQrCode = `QRProduct-${item.name}.png`;
                     await QRCode.create(nameQrCode,item.code);
-                    const projectResult = await projectTable.create({name:item.name});
+                    const projectResult = await productTable.create({name:item.name});
                     const qrCodeResult = await qrCodeTable.create({
                         productName:item.name,
                         pathImage:`${req.protocol}://${req.headers.host}/${nameQrCode}`,
@@ -57,8 +59,9 @@ class ProjectController{
                 });
                 fs.unlinkSync(path);
             }
-            res.status(200).json({message:"Insert process sucessful"});
-        }catch(error){
+            res.status(201).json({message:"Insert process sucessful"});
+        }
+        catch(error){
             res.status(500).json({message:"[ERROR] insert excel to system failed"});
             throw error;
         }
@@ -69,7 +72,36 @@ class ProjectController{
     }
     
     static async delete(req, res){
-
+        /*
+            #swagger.description = "Deletar QRCode da pasta public e da base de dados a partir de um id"
+        */
+       /*
+            #swagger.parameters['id']={
+                description:"Insira o id do item que deseja excluir",
+                type:"integer",
+                required:true,
+            }
+       */
+        try{
+            controller.relationshipTables();
+            const id = req.params.id;
+            const resultProduct = await productTable.findOne({
+                where:{id:id},
+                include:qrCodeTable, 
+            });
+            const {qrcode} = resultProduct;
+            let fileName = qrcode.pathImage.split('/');
+            fileName = fileName[fileName.length-1];
+            fs.unlinkSync(path.resolve(`public/${fileName}`))
+            productTable.destroy({
+                where:{id:id},
+                include:qrCodeTable
+            })
+            res.status(204).json({message:"Content excluded sucessful"})
+        }catch(err){
+            res.status(500).json({message:"[ERROR] Can't exclude content"});
+            throw err;
+        }
     }
 
     arrCodes = '';
